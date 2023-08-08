@@ -1,0 +1,30 @@
+services:
+
+  server:
+    image: savemyrpg-production
+    networks: 
+      - network1
+    ports:
+      - 8100:8100
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    networks: 
+      - network1
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: ninjame
+      POSTGRES_DB: default
+      PGDATA: /dbdata
+      
+
+    volumes:
+      - c:\Users\brent\Documents\Programming\SaveMyRPGServer\bg3_saves:/bg3_saves
+      - c:\Users\brent\Documents\Programming\SaveMyRPGServer\db_initialize.sql:/db_scripts/db_initialize.sql
+ 
+networks:
+  network1:
+    name: smrpg
+    external: true

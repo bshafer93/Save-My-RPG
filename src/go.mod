@@ -1,4 +1,4 @@
-module github.com/bshafer93/savemyrpg
+module savemyrpg
 
 go 1.20
 

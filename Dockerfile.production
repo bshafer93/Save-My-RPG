@@ -17,6 +17,7 @@ ENV APP_HOME /go/src/savemyrpgserver
 RUN mkdir -p "$APP_HOME"
 WORKDIR "$APP_HOME"
 COPY src/ .
+COPY src/config.json $APP_HOME
 COPY --from=builder "$APP_HOME"/savemyrpgserver $APP_HOME
 
 EXPOSE 8100

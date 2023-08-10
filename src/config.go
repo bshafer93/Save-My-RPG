@@ -4,30 +4,40 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 )
 
 type Config struct {
-	server_host string `json:"server_host",envconfig:"SERVER_HOST"`
-	server_port string `json:"server_port",envconfig:"SERVER_PORT"`
-	db_host     string `json:"db_host",envconfig:"DB_HOST"`
-	db_port     string `json:"db_port",envconfig:"DB_PORT"`
-	db_username string `json:"db_username",envconfig:"DB_USERNAME"`
-	db_password string `json:"db_password",envconfig:"DB_PASSWORD"`
+	SERVER_HOST string `json:"server_host"`
+	SERVER_PORT string `json:"server_port"`
+	SERVER_CERT string `json:"server_cert"`
+	SERVER_KEY  string `json:"server_key"`
+	DB_HOST     string `json:"db_host"`
+	DB_PORT     string `json:"db_port"`
+	DB_USERNAME string `json:"db_username"`
+	DB_PASSWORD string `json:"db_password"`
 }
 
 var config Config = Config{}
 
-func LoadConfiguration(file_path string) Config {
-	config := Config{}
+func LoadConfiguration(file_path string) (*Config, error) {
 
-	configFile, err := os.Open(file_path)
-	defer configFile.Close()
+	configFile, err := os.ReadFile(file_path)
 	if err != nil {
 		fmt.Println(err.Error())
-		fmt.Println("Failed to load config.json")
+		return nil, err
 	}
 
-	jsonParser := json.NewDecoder(configFile)
-	jsonParser.Decode(&config)
-	return config
+	json.Unmarshal(configFile, &config)
+	fmt.Println("Config File Loaded!")
+	PrintConfig()
+	return &config, nil
+}
+
+func PrintConfig() {
+	values := reflect.ValueOf(config)
+	types := values.Type()
+	for i := 0; i < values.NumField(); i++ {
+		fmt.Println(types.Field(i).Name, ": ", values.Field(i))
+	}
 }

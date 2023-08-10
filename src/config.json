@@ -1,10 +1,10 @@
 {
-  "config": {
-    "server_host": "192.168.1.33",
-    "server_port": 8100,
-    "db_host": "192.168.1.33",
-    "db_port": 5432,
-    "db_username": "admin",
-    "db_password": "ninjame"
-  }
+  "server_host": "192.168.1.33",
+  "server_port": "8100",
+  "server_cert": "/go/src/savemyrpgserver/localhost.crt",
+  "server_key": "/go/src/savemyrpgserver/localhost.key",
+  "db_host": "192.168.1.33",
+  "db_port": "5432",
+  "db_username": "admin",
+  "db_password": "ninjame"
 }

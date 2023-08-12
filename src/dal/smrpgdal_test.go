@@ -15,7 +15,6 @@ func TestAddUser(t *testing.T) {
 	if AddUser(&u1) == false {
 		t.Errorf("User %v should be able to be added", u1.Email)
 	}
-
 }
 func TestGetUser(t *testing.T) {
 	Connect()

@@ -1,23 +1,75 @@
 package main
 
 import (
-	"fmt"
-	"savemyrpg/dal"
+	"bytes"
+	"encoding/binary"
+	"savemyrpg/smrpg"
 	"testing"
 )
 
-func TestInit(t *testing.T) {
-	if Init() != true {
-		t.Errorf("Output Failed to connect")
+func TestDeserializeChunk(t *testing.T) {
+	c := smrpg.SaveFileChunk{}
+	c.TotalChunks = 789
+	c.ChunkNumber = 89
+	c.ChunkSize = 512000
+	c.Data = bytes.Repeat([]byte("A"), 512000)
+	buf := smrpg.SerializeChunk(&c)
+
+	c_deserialized := smrpg.DeserializeChunk(buf)
+
+	t.Logf("Total Chunks: %d", c_deserialized.TotalChunks)
+	t.Logf("Chunk Number: %d", c_deserialized.ChunkNumber)
+	t.Logf("Chunk Size %d", c_deserialized.ChunkSize)
+
+	if c_deserialized.TotalChunks != c.TotalChunks {
+		t.Errorf("Total Chunks Expected: %v != %v", c.TotalChunks, c_deserialized.TotalChunks)
+	}
+
+	if c_deserialized.ChunkNumber != c.ChunkNumber {
+		t.Errorf("Chunk Number Expected: %v != %v", c.ChunkNumber, c_deserialized.ChunkNumber)
+	}
+
+	if c_deserialized.ChunkSize != c.ChunkSize {
+		t.Errorf("Chunk Size Expected: %v != %v", c.ChunkSize, c_deserialized.ChunkSize)
+	}
+
+	if !bytes.Equal(c_deserialized.Data, c.Data) {
+		t.Error("Chunk Data not equal!")
 	}
 }
 
-func TestRegister(t *testing.T) {
-	Init()
-	_, err := Register("Carl", "carl@gmail.com")
-	dal.RemoveUser("carl@gmail.com")
-	if err != nil {
-		fmt.Println(err)
-		t.Errorf("Failed to Register User")
+func TestSerializeChunk(t *testing.T) {
+	c := smrpg.SaveFileChunk{}
+	c.TotalChunks = 10
+	c.ChunkNumber = 7
+	c.ChunkSize = 512000
+	c.Data = bytes.Repeat([]byte("A"), 512000)
+	buf := smrpg.SerializeChunk(&c)
+	var tn uint32 = binary.LittleEndian.Uint32(buf[0:])
+	var cn uint32 = binary.LittleEndian.Uint32(buf[4:])
+	var cs uint32 = binary.LittleEndian.Uint32(buf[8:])
+
+	t.Logf("Total Chunks: %d", tn)
+	t.Logf("Chunk Number: %d", cn)
+	t.Logf("Chunk Size %d", cs)
+
+	if tn != c.TotalChunks {
+		t.Errorf("Total Chunks Expected: %v != %v", c.TotalChunks, tn)
 	}
+
+	if cn != c.ChunkNumber {
+		t.Errorf("Chunk Number Expected: %v != %v", c.ChunkNumber, cn)
+	}
+
+	if cs != c.ChunkSize {
+		t.Errorf("Chunk Size Expected: %v != %v", c.ChunkSize, cs)
+	}
+
+	if !bytes.Equal(buf[12:], c.Data) {
+		t.Error("Chunk Data not equal!")
+	}
+}
+
+func TestEstablishFileLink(t *testing.T) {
+
 }

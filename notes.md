@@ -20,3 +20,10 @@ docker run -it --rm --network smrpg postgres psql -U smrpg_db
 docker compose -f docker-compose.yaml up
 
 psql -U admin -d default -a -f /db_scripts/db_initialize.sql
+
+docker run -d --network smrpg cloudflare/cloudflared:latest tunnel --no-autoupdate run --token eyJhIjoiZGQyNDcxNTAwODU2NTE5NWRhZmFkN2ZjMzlkNTAwYjciLCJ0IjoiNTRiMTM5NWQtZTE2NC00Njc1LTg2NTUtNzJhYjhmODU4ODZhIiwicyI6Ik5HTmlOVGM0T0RRdFlqTm1aUzAwTUdGbUxXSTNOR1l0WkdJM00yWTNNbVpsTnpReSJ9
+
+https://www.youtube.com/watch?v=QXooywQSfJY - set up docker in truecharts 
+
+
+docker run -d --name=tailscaled --network smrpg --cap-add=NET_ADMIN --socks5-server=localhost:8100 --cap-add=NET_RAW TS_AUTHKEY=tskey-auth-ab1CDE2CNTRL-0123456789abcdef tailscale/tailscale

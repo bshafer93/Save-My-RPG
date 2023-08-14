@@ -18,11 +18,10 @@ services:
       POSTGRES_PASSWORD: ninjame
       POSTGRES_DB: default
       PGDATA: /dbdata
-      
-
     volumes:
       - c:\Users\brent\Documents\Programming\SaveMyRPGServer\bg3_saves:/bg3_saves
       - c:\Users\brent\Documents\Programming\SaveMyRPGServer\db_initialize.sql:/db_scripts/db_initialize.sql
+      
   tunnel:
     image: cloudflare/cloudflared:latest
     command: tunnel --no-autoupdate run -d

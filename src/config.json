@@ -7,5 +7,7 @@
   "db_port": "5432",
   "db_username": "admin",
   "db_password": "ninjame",
-  "saves_path": "/bg_saves/"
+  "saves_path": "/bg_saves/",
+  "bunnynet_read_api_key": "8dd921f4-f42f-4cf4-9678f098e1ac-b110-46b1",
+  "bunnynet_write_api_key":"dd5fe0ff-81d7-4e90-ba12a9404d3f-4e9a-4e60"
 }

@@ -70,6 +70,32 @@ func TestSerializeChunk(t *testing.T) {
 	}
 }
 
-func TestEstablishFileLink(t *testing.T) {
+func TestInitBunny(t *testing.T) {
+	_, err := smrpg.LoadConfiguration("config.json")
+	if err != nil {
+		t.Error(err)
+	}
+	smrpg.InitBunny()
+	smrpg.BunnyListAllFIles()
+
+}
+
+func TestBunnyDownloadFile(t *testing.T) {
+	_, err := smrpg.LoadConfiguration("config.json")
+	if err != nil {
+		t.Error(err)
+	}
+	smrpg.InitBunny()
+	smrpg.BunnyDownloadFile("Norbertle-3812316722__TheHollow.zip")
+
+}
+
+func TestBunnyUploadFile(t *testing.T) {
+	_, err := smrpg.LoadConfiguration("config.json")
+	if err != nil {
+		t.Error(err)
+	}
+	smrpg.InitBunny()
+	smrpg.BunnyUploadFile("TempFolder", "AnotherZipBytesTheDust.zip", `Norbertle-3812316722__Poop.zip`, `C:\Users\brent\Documents\Programming\SaveMyRPGServer\src\Norbertle-3812316722__Poop.zip`)
 
 }

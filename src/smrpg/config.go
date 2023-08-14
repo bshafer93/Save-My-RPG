@@ -8,15 +8,17 @@ import (
 )
 
 type Config struct {
-	SERVER_HOST string `json:"server_host"`
-	SERVER_PORT string `json:"server_port"`
-	SERVER_CERT string `json:"server_cert"`
-	SERVER_KEY  string `json:"server_key"`
-	DB_HOST     string `json:"db_host"`
-	DB_PORT     string `json:"db_port"`
-	DB_USERNAME string `json:"db_username"`
-	DB_PASSWORD string `json:"db_password"`
-	SAVES_PATH  string `json:"saves_path"`
+	SERVER_HOST            string `json:"server_host"`
+	SERVER_PORT            string `json:"server_port"`
+	SERVER_CERT            string `json:"server_cert"`
+	SERVER_KEY             string `json:"server_key"`
+	DB_HOST                string `json:"db_host"`
+	DB_PORT                string `json:"db_port"`
+	DB_USERNAME            string `json:"db_username"`
+	DB_PASSWORD            string `json:"db_password"`
+	SAVES_PATH             string `json:"saves_path"`
+	BUNNYNET_READ_API_KEY  string `json:"bunnynet_read_api_key"`
+	BUNNYNET_WRITE_API_KEY string `json:"bunnynet_write_api_key"`
 }
 
 var config Config = Config{}

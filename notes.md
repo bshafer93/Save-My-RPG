@@ -26,4 +26,7 @@ docker run -d --network smrpg cloudflare/cloudflared:latest tunnel --no-autoupda
 https://www.youtube.com/watch?v=QXooywQSfJY - set up docker in truecharts 
 
 
-docker run -d --name=tailscaled --network smrpg --cap-add=NET_ADMIN --socks5-server=localhost:8100 --cap-add=NET_RAW TS_AUTHKEY=tskey-auth-ab1CDE2CNTRL-0123456789abcdef tailscale/tailscale
+docker run -d --name=tailscaled --network smrpg --cap-add=NET_ADMIN --socks5-server=localhost:8100 --cap-add=NET_RAW TS_AUTHKEY=tskey-auth-kfQ4Wi4CNTRL-jtHsHF4uUTjdBkSJRSjPTjeW2BTsVxV72 tailscale/tailscale
+
+
+ny.storage.bunnycdn.com

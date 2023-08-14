@@ -16,6 +16,15 @@ func TestAddUser(t *testing.T) {
 		t.Errorf("User %v should be able to be added", u1.Email)
 	}
 }
+
+func TestAddCampaign(t *testing.T) {
+	Connect()
+	player_emails := [3]string{"user1@example.com", "user2@example.com", "user3@example.com"}
+
+	if AddCampaign("TheBestCampaignEver", "bshafer93@gmail.com", player_emails) == false {
+		t.Errorf("Campaign %v should be able to be added", "TheBestCampaignEver")
+	}
+}
 func TestGetUser(t *testing.T) {
 	Connect()
 	u1 := GetUser("bshafer93@gmail.com")
@@ -42,6 +51,13 @@ func TestRemoveUser(t *testing.T) {
 
 	if RemoveUser(u1.Email) == false {
 		t.Errorf("User %v should be able to be removed", u1.Email)
+	}
+}
+
+func TestRemoveCampaign(t *testing.T) {
+	Connect()
+	if RemoveCampaign(2, `bshafer93@gmail.com`) == false {
+		t.Errorf("Campaign %v should be able to be removed", 2)
 	}
 }
 

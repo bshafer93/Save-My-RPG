@@ -1,5 +1,42 @@
+# git.sr.ht/~jamesponddotco/bunnystorage-go v0.3.0
+## explicit; go 1.20
+git.sr.ht/~jamesponddotco/bunnystorage-go
+git.sr.ht/~jamesponddotco/bunnystorage-go/internal/build
+# git.sr.ht/~jamesponddotco/httpx-go v0.0.0-20230427215504-7c26a7f028e7
+## explicit; go 1.20
+git.sr.ht/~jamesponddotco/httpx-go
+git.sr.ht/~jamesponddotco/httpx-go/internal/build
+git.sr.ht/~jamesponddotco/httpx-go/internal/httpclient
+git.sr.ht/~jamesponddotco/httpx-go/internal/separator
+# git.sr.ht/~jamesponddotco/pagecache-go v0.0.0-20230411150210-54b704d32088
+## explicit; go 1.20
+git.sr.ht/~jamesponddotco/pagecache-go
+git.sr.ht/~jamesponddotco/pagecache-go/memorycachex
+# git.sr.ht/~jamesponddotco/recache-go v1.0.1
+## explicit; go 1.20
+git.sr.ht/~jamesponddotco/recache-go
+git.sr.ht/~jamesponddotco/recache-go/lrure
+# git.sr.ht/~jamesponddotco/xstd-go v0.0.0-20230709232003-22489c0e7382
+## explicit; go 1.20
+git.sr.ht/~jamesponddotco/xstd-go/xcrypto/xrand
+git.sr.ht/~jamesponddotco/xstd-go/xerrors
+git.sr.ht/~jamesponddotco/xstd-go/xhash/xfnv
+git.sr.ht/~jamesponddotco/xstd-go/xlog
+git.sr.ht/~jamesponddotco/xstd-go/xnet/xhttp/xhttputil
+git.sr.ht/~jamesponddotco/xstd-go/xstrings
+git.sr.ht/~jamesponddotco/xstd-go/xunsafe
 # github.com/lib/pq v1.10.9
 ## explicit; go 1.13
 github.com/lib/pq
 github.com/lib/pq/oid
 github.com/lib/pq/scram
+# golang.org/x/crypto v0.8.0
+## explicit; go 1.17
+golang.org/x/crypto/chacha20
+golang.org/x/crypto/internal/alias
+# golang.org/x/sys v0.7.0
+## explicit; go 1.17
+golang.org/x/sys/cpu
+# golang.org/x/time v0.3.0
+## explicit
+golang.org/x/time/rate

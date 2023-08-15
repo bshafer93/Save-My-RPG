@@ -7,5 +7,5 @@ ENV APP_HOME /go/src/savemyrpg
 RUN mkdir -p "$APP_HOME"
 
 WORKDIR "$APP_HOME"
-EXPOSE 8100
+EXPOSE 443
 CMD ["./savemyrpg"]

@@ -30,3 +30,7 @@ docker run -d --name=tailscaled --network smrpg --cap-add=NET_ADMIN --socks5-ser
 
 
 ny.storage.bunnycdn.com
+
+https://fonts.google.com/icons?selected=Material+Symbols+Rounded:person:FILL@0;wght@400;GRAD@0;opsz@20&icon.query=user&icon.style=Rounded&icon.platform=web
+
+

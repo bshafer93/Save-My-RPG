@@ -1,39 +1,68 @@
 services:
 
   server:
-    image: savemyrpg-production
-    networks: 
+    image: index.docker.io/norbertle/savemyrpg
+    container_name: smrpg_server
+    networks:
       - network1
     ports:
-      - 8100:8100
+      - 443:443
+    volumes:
+      - /root/smrpg_docker/bg3_saves:/bg3_saves
+      - /root/smrpg_docker/serverdata:/serverdata
+      - /root/smrpg_docker/ssl:/ssl
+
   db:
     image: postgres
+    container_name: smrpg_db
     restart: always
     ports:
       - 5432:5432
-    networks: 
+    networks:
       - network1
+    volumes:
+      - /root/smrpg_docker/bg3_saves:/bg3_saves
+      - /root/smrpg_docker/dbdata:/dbdata
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: ninjame
       POSTGRES_DB: default
       PGDATA: /dbdata
-    volumes:
-      - c:\Users\brent\Documents\Programming\SaveMyRPGServer\bg3_saves:/bg3_saves
-      - c:\Users\brent\Documents\Programming\SaveMyRPGServer\db_initialize.sql:/db_scripts/db_initialize.sql
-      
-  tunnel:
-    image: cloudflare/cloudflared:latest
-    command: tunnel --no-autoupdate run -d
-    env_file: tunnel.env
-    restart: always
-    container_name: tunnel
-    networks: 
+  watchtower:
+    image: index.docker.io/containrrr/watchtower:latest
+    container_name: watchtower
+    networks:
       - network1
-    depends_on:
-      - db
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json
+    command: --interval 30 smrpg_server
+    environment:
+      WATCHTOWER_NOTIFICATION_REPORT: "true"
+      WATCHTOWER_NOTIFICATION_URL: >
+        discord://8FIetuxRmMID-1Ebf0X1MgtfafUconwq2Uba2Mj5ncfKOOBmjDKt5w79bqZgf8QSRVjp@1141045180984721408 discord://8FIetuxRmMID-1Ebf0X1MgtfafUconwq2Uba2Mj5ncfKOOBmjDKt5w79bqZgf8QSRVjp@1096112705968029706
+      WATCHTOWER_NOTIFICATION_TEMPLATE: |
+        {{- if .Report -}}
+          {{- with .Report -}}
+        {{len .Scanned}} Scanned, {{len .Updated}} Updated, {{len .Failed}} Failed
+              {{- range .Updated}}
+        - {{.Name}} ({{.ImageName}}): {{.CurrentImageID.ShortID}} updated to {{.LatestImageID.ShortID}}
+              {{- end -}}
+              {{- range .Fresh}}
+        - {{.Name}} ({{.ImageName}}): {{.State}}
+            {{- end -}}
+            {{- range .Skipped}}
+        - {{.Name}} ({{.ImageName}}): {{.State}}: {{.Error}}
+            {{- end -}}
+            {{- range .Failed}}
+        - {{.Name}} ({{.ImageName}}): {{.State}}: {{.Error}}
+            {{- end -}}
+          {{- end -}}
+        {{- else -}}
+          {{range .Entries -}}{{.Message}}{{"\n"}}{{- end -}}
+        {{- end -}}
 
 networks:
   network1:
-    name: smrpg
+    name: smrpgnet
     external: true

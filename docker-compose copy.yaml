@@ -1,0 +1,7 @@
+services:
+
+  server:
+    image: norbertle/savemyrpg
+    ports:
+      - 443:443
+      

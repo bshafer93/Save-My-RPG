@@ -10,7 +10,6 @@ import (
 
 func main() {
 	smrpg.Init()
-	smrpg.ZipSaveFile("Norbertle-31112316728_smrpg")
 
 	log.Fatal(smrpg.Start())
 

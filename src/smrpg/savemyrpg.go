@@ -115,6 +115,7 @@ func Start() error {
 		fmt.Println("Failed to start server...")
 		return err
 	}
+	fmt.Println("TLS Connection Established!")
 	return nil
 }
 

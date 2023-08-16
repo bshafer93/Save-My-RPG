@@ -127,9 +127,6 @@ func (c *Client) Upload(ctx context.Context, path, filename, checksum string, bo
 	}
 
 	req, err := c.request(ctx, http.MethodPut, uri, headers, body)
-	for key, h := range headers {
-		fmt.Println("Key:", key, "=>", "Element:", h)
-	}
 	if err != nil {
 		return nil, fmt.Errorf("%w", err)
 	}

@@ -13,6 +13,7 @@ import (
 	"savemyrpg/dal"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	_ "github.com/lib/pq"
 )
 
@@ -105,6 +106,7 @@ func Init() bool {
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/serverinfo", ServerInfoHandler)
 	http.HandleFunc("/getfullsave", SendFullFile)
+	http.HandleFunc("/login", Login)
 	return true
 }
 
@@ -135,20 +137,47 @@ func Register(username string, email string) (*User, error) {
 	return &new_user, nil
 }
 
-func Login(username string, email string) error {
-	// Check if user exists and retrieve their hashed password
-	if !dal.FindUser(email) {
-		return errors.New("username does not exist")
+func Login(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.Body)
+
+	resp_bytes, err := io.ReadAll(r.Body)
+	fmt.Println(resp_bytes)
+	fmt.Println(string(resp_bytes))
+	if err != nil {
+		fmt.Println(err)
+	}
+	userInfoJson := &User{}
+
+	err = json.Unmarshal(resp_bytes, userInfoJson)
+
+	if err != nil {
+		fmt.Println(err)
 	}
 
-	dal.GetUser(email)
+	fmt.Println("Username: "+userInfoJson.Username+"\nEmail:", userInfoJson.Email)
+	w.WriteHeader(http.StatusOK)
 
+	// Check if user exists
+	if !dal.FindUser(userInfoJson.Username) {
+		fmt.Println("username does not exist")
+	}
+	dal.GetUser(userInfoJson.Email)
 	// Compare provided password with stored hashed password
-
 	// If they match, create a new session
-
+	token := CreateLoginToken()
+	tokenString, _ := token.SignedString("MySuperSecretSecretKey")
+	w.WriteHeader(http.StatusOK)
+	b := []byte(tokenString)
+	w.Write(b)
 	// Return the session or error
-	return nil
+}
+
+func CreateLoginToken() *jwt.Token {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"foo": "bar",
+		"nbf": time.Now().Unix(),
+	})
+	return token
 }
 
 func Logout(sessionID string) error {

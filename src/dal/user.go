@@ -3,8 +3,8 @@ package dal
 import "fmt"
 
 type User struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
+	Username string `json:"Username"`
+	Email    string `json:"Email"`
 }
 
 func AddUser(user *User) bool {

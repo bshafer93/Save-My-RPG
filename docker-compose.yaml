@@ -35,12 +35,12 @@ services:
       - network1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /root/.docker/config.json
+      - /root/.docker/config.json:/config.json
     command: --interval 30 smrpg_server
     environment:
       WATCHTOWER_NOTIFICATION_REPORT: "true"
       WATCHTOWER_NOTIFICATION_URL: >
-        discord://8FIetuxRmMID-1Ebf0X1MgtfafUconwq2Uba2Mj5ncfKOOBmjDKt5w79bqZgf8QSRVjp@1141045180984721408 discord://8FIetuxRmMID-1Ebf0X1MgtfafUconwq2Uba2Mj5ncfKOOBmjDKt5w79bqZgf8QSRVjp@1096112705968029706
+        discord://8FIetuxRmMID-1Ebf0X1MgtfafUconwq2Uba2Mj5ncfKOOBmjDKt5w79bqZgf8QSRVjp@1141045180984721408
       WATCHTOWER_NOTIFICATION_TEMPLATE: |
         {{- if .Report -}}
           {{- with .Report -}}

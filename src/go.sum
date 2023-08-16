@@ -8,6 +8,8 @@ git.sr.ht/~jamesponddotco/recache-go v1.0.1 h1:O9S7SdGyMh4mD+Vom0WOkY45EhJJHDRBl
 git.sr.ht/~jamesponddotco/recache-go v1.0.1/go.mod h1:oF6LkAuwZYQqHe8+G/4hP9ZSNyDjAk6J8qhuy44wXw0=
 git.sr.ht/~jamesponddotco/xstd-go v0.0.0-20230709232003-22489c0e7382 h1:3LjkxT6zVDvIlaOc5riiRAnAKVgpTWHxWgmzpzOuR8A=
 git.sr.ht/~jamesponddotco/xstd-go v0.0.0-20230709232003-22489c0e7382/go.mod h1:0tqdK5/MZYSPxAiwtG4LlVfdQ+iaFoksU/FTIGQ/v/Y=
+github.com/golang-jwt/jwt/v5 v5.0.0 h1:1n1XNM9hk7O9mnQoNBGolZvzebBQ7p93ULHRc28XJUE=
+github.com/golang-jwt/jwt/v5 v5.0.0/go.mod h1:pqrtFR0X4osieyHYxtmOUWsAWrfe1Q5UVIyoH402zdk=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 golang.org/x/crypto v0.8.0 h1:pd9TJtTueMTVQXzk8E2XESSMQDj/U7OUu0PqJqPXQjQ=

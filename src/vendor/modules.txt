@@ -25,6 +25,11 @@ git.sr.ht/~jamesponddotco/xstd-go/xlog
 git.sr.ht/~jamesponddotco/xstd-go/xnet/xhttp/xhttputil
 git.sr.ht/~jamesponddotco/xstd-go/xstrings
 git.sr.ht/~jamesponddotco/xstd-go/xunsafe
+# github.com/golang-jwt/jwt v3.2.2+incompatible
+## explicit
+# github.com/golang-jwt/jwt/v5 v5.0.0
+## explicit; go 1.18
+github.com/golang-jwt/jwt/v5
 # github.com/lib/pq v1.10.9
 ## explicit; go 1.13
 github.com/lib/pq

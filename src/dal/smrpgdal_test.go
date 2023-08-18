@@ -64,11 +64,13 @@ func TestRemoveCampaign(t *testing.T) {
 // Search and Filters
 func TestFindUser(t *testing.T) {
 	Connect()
-	if FindUser("bshafer93@gmail.com") != true {
+	b := FindUserEmail("bshafer93@gmail.com")
+
+	if b != true {
 		t.Errorf("Output %v : User %v does exist", false, "bshafer93@gmail.com")
 	}
 
-	if FindUser("bsh93@gmail.com") != false {
+	if FindUserEmail("bsh93@gmail.com") != false {
 		t.Errorf("Output %v : User %v does not exist", true, "bsh93@gmail.com")
 	}
 }

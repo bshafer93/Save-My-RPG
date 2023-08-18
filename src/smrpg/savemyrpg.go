@@ -3,6 +3,7 @@ package smrpg
 // import the package we need to use
 import (
 	"archive/zip"
+	"crypto/tls"
 	b64 "encoding/base64"
 	"encoding/json"
 	"errors"
@@ -23,6 +24,8 @@ type ServerInfo struct {
 }
 
 type User = dal.User
+
+var server *http.Server
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	page_text := `<!DOCTYPE html>
@@ -100,18 +103,38 @@ func Init() bool {
 		return false
 	}
 
+	cert, err := tls.LoadX509KeyPair(config.SERVER_CERT, config.SERVER_KEY)
+	if err != nil {
+		return false
+	}
+
+	tls_config := &tls.Config{Certificates: []tls.Certificate{cert}}
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", handler)
+	mux.HandleFunc("/serverinfo", ServerInfoHandler)
+	mux.HandleFunc("/getfullsave", SendFullFile)
+	mux.HandleFunc("/login", Login)
+
+	server = &http.Server{
+		Addr:              ":" + config.SERVER_PORT,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       30 * time.Second,
+		ReadHeaderTimeout: 30 * time.Second,
+		TLSConfig:         tls_config,
+		Handler:           mux,
+	}
+
 	if !dal.Init() {
 		return false
 	}
-	http.HandleFunc("/", handler)
-	http.HandleFunc("/serverinfo", ServerInfoHandler)
-	http.HandleFunc("/getfullsave", SendFullFile)
-	http.HandleFunc("/login", Login)
+
 	return true
 }
 
 func Start() error {
-	err := http.ListenAndServeTLS(":"+config.SERVER_PORT, config.SERVER_CERT, config.SERVER_KEY, nil)
+
+	err := server.ListenAndServeTLS(config.SERVER_CERT, config.SERVER_KEY)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Failed to start server...")
@@ -123,7 +146,7 @@ func Start() error {
 
 func Register(username string, email string) (*User, error) {
 	// Check if user already exists
-	if dal.FindUser(email) {
+	if dal.FindUserEmail(email) {
 		return nil, errors.New("user email taken")
 	}
 	new_user := User{Username: username, Email: email}
@@ -138,7 +161,6 @@ func Register(username string, email string) (*User, error) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.Body)
 
 	resp_bytes, err := io.ReadAll(r.Body)
 	fmt.Println(resp_bytes)
@@ -155,20 +177,21 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println("Username: "+userInfoJson.Username+"\nEmail:", userInfoJson.Email)
-	w.WriteHeader(http.StatusOK)
 
 	// Check if user exists
-	if !dal.FindUser(userInfoJson.Username) {
-		fmt.Println("username does not exist")
+	if !dal.FindUserEmail(userInfoJson.Email) {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Username does not exist"))
 	}
 	dal.GetUser(userInfoJson.Email)
+	w.Header().Add("login-token", "BananaFoster")
+	w.WriteHeader(http.StatusAccepted)
+	w.Write([]byte("Logged in!"))
 	// Compare provided password with stored hashed password
 	// If they match, create a new session
-	token := CreateLoginToken()
+	/*token := CreateLoginToken()
 	tokenString, _ := token.SignedString("MySuperSecretSecretKey")
-	w.WriteHeader(http.StatusOK)
-	b := []byte(tokenString)
-	w.Write(b)
+	*/
 	// Return the session or error
 }
 

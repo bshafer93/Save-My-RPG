@@ -15,7 +15,7 @@ func Init() bool {
 }
 
 func Connect() bool {
-	connStr := "postgres://admin:ninjame@192.168.1.155:9432/default?sslmode=disable"
+	connStr := "postgres://admin:ninjame@savemyrpg.com:5432/default?sslmode=disable"
 	var err error
 	db, err = sql.Open("postgres", connStr)
 

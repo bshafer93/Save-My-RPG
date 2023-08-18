@@ -1,6 +1,8 @@
 package dal
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type User struct {
 	Username string `json:"Username"`
@@ -38,13 +40,16 @@ func UpdateUserName() {
 
 }
 
-func FindUser(email string) bool {
-	var b int
+func FindUserEmail(email string) bool {
+	var doesExist bool
 
-	q := "SELECT COUNT(*) FROM users WHERE email = '" + email + "';"
-	row := db.QueryRow(q)
-	row.Scan(&b)
-	return b >= 1
+	//q := `SELECT EXISTS (SELECT FROM users WHERE email='$1');`
+	qu := fmt.Sprintf(`SELECT EXISTS (SELECT FROM users WHERE email='%s');`, email)
+	fmt.Println("Query: ", qu)
+	db.QueryRow(qu).Scan(&doesExist)
+
+	fmt.Println("FindUser Result: ", doesExist)
+	return doesExist
 }
 
 func GetUser(email string) *User {

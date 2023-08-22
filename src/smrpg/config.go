@@ -19,6 +19,7 @@ type Config struct {
 	SAVES_PATH             string `json:"saves_path"`
 	BUNNYNET_READ_API_KEY  string `json:"bunnynet_read_api_key"`
 	BUNNYNET_WRITE_API_KEY string `json:"bunnynet_write_api_key"`
+	JWT_SECRET_KEY         string `json:"jwt_secret_key"`
 }
 
 var config Config = Config{}

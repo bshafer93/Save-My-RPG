@@ -14,7 +14,6 @@ import (
 	"savemyrpg/dal"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	_ "github.com/lib/pq"
 )
 
@@ -183,41 +182,14 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Username does not exist"))
 	}
-	dal.GetUser(userInfoJson.Email)
-	w.Header().Add("login-token", "BananaFoster")
-	w.WriteHeader(http.StatusAccepted)
+
+	userInfo := dal.GetUser(userInfoJson.Email)
+	tokenString := CreateLoginToken(userInfo)
+
+	println("User: " + userInfo.Username + " Logged in!")
+
+	w.Header().Add("jwt-token", tokenString)
 	w.Write([]byte("Logged in!"))
-	// Compare provided password with stored hashed password
-	// If they match, create a new session
-	/*token := CreateLoginToken()
-	tokenString, _ := token.SignedString("MySuperSecretSecretKey")
-	*/
-	// Return the session or error
-}
-
-func CreateLoginToken() *jwt.Token {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"foo": "bar",
-		"nbf": time.Now().Unix(),
-	})
-	return token
-}
-
-func Logout(sessionID string) error {
-	// Invalidate the session using the provided sessionID
-	return errors.New("function not implemented")
-}
-
-func ResetPassword(username, newPassword string) error {
-	// Validate user existence
-	// Hash the new password
-	// Update password in the database
-	return errors.New("function not implemented")
-}
-
-func CheckAuthentication(sessionID string) (bool, error) {
-	// Check if the sessionID is valid and not expired
-	return false, errors.New("function not implemented")
 }
 
 func ZipSaveFile(folder_name string) string {
@@ -302,6 +274,10 @@ func SendZipFile(save_zip_path string) {
 		sfc.TotalChunks = uint32(total_chunks)
 		sfc.ChunkNumber = uint32(current_chunk)
 	}
+
+}
+
+func JoinCampaign(w http.ResponseWriter, r *http.Request) {
 
 }
 

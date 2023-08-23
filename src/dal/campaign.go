@@ -6,12 +6,13 @@ import (
 )
 
 type Campaign struct {
-	id         int    `json:"id"`
-	name       string `json:"name"`
-	host_email string `json:"host_email"`
-	p2_email   string `json:"p2_email"`
-	p3_email   string `json:"p3_email"`
-	p4_email   string `json:"p4_email"`
+	ID             string  `json:"id" db:"id"`
+	Name           string  `json:"name" db:"name"`
+	Host_Email     string  `json:"host_email" db:"host_email"`
+	Player02_Email *string `json:"p2_email" db:"player02_email"`
+	Player03_Email *string `json:"p3_email" db:"player03_email"`
+	Player04_Email *string `json:"p4_email" db:"player04_email"`
+	Last_Save      *string `json:"last_save" db:"last_save"`
 }
 
 func AddCampaign(campaign_name string, host_email string, player_emails [3]string) bool {
@@ -34,4 +35,73 @@ func RemoveCampaign(campaign_id int, host_email string) bool {
 		return false
 	}
 	return true
+}
+
+func GetAllHostCampaigns(host_email string) []Campaign {
+
+	q := fmt.Sprintf(`SELECT * FROM groups WHERE host_email = '%s'`, host_email)
+
+	campaigns := make([]Campaign, 0, 10)
+	rows, err := db.Query(q)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer rows.Close()
+	/*
+		cols, err := rows.Columns()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		for i := 0; i < len(cols); i++ {
+			println(cols[i])
+		}
+	*/
+
+	for rows.Next() {
+		c := Campaign{}
+		err = rows.Scan(&c.ID,
+			&c.Name,
+			&c.Host_Email,
+			&c.Player02_Email,
+			&c.Player03_Email,
+			&c.Player04_Email,
+			&c.Last_Save)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+		campaigns = append(campaigns, c)
+	}
+
+	return campaigns
+}
+
+func GetAllJoinedCampaigns(email string) []Campaign {
+	q := fmt.Sprintf(`SELECT * FROM groups WHERE host_email = '%[1]s' OR player02_email = '%[1]s' OR player03_email = '%[1]s' OR player04_email = '%[1]s'`, email)
+	campaigns := make([]Campaign, 0, 10)
+	rows, err := db.Query(q)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		c := Campaign{}
+		err = rows.Scan(&c.ID,
+			&c.Name,
+			&c.Host_Email,
+			&c.Player02_Email,
+			&c.Player03_Email,
+			&c.Player04_Email,
+			&c.Last_Save)
+		fmt.Println("P4: ", c.Player04_Email)
+		if err != nil {
+			fmt.Println(err)
+		}
+		campaigns = append(campaigns, c)
+	}
+
+	return campaigns
 }

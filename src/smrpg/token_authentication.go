@@ -27,14 +27,12 @@ func VerifyJWT(token string) bool {
 	tkn, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.JWT_SECRET_KEY), nil
 	})
-
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
 			fmt.Println(err)
 			return false
 		}
 	}
-
 	if !tkn.Valid {
 		fmt.Println("Token Not Valid")
 		return false

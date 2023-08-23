@@ -1,6 +1,8 @@
 package dal
 
-import "testing"
+import (
+	"testing"
+)
 
 // SetUp
 
@@ -37,6 +39,48 @@ func TestGetUser(t *testing.T) {
 	}
 
 }
+
+func TestGetAllHostCampaigns(t *testing.T) {
+	test_strings := [3]string{"TheBestCampaignEver", "GnomishAdventure", "AnotherCampaign"}
+
+	Connect()
+	c := GetAllHostCampaigns("bshafer93@gmail.com")
+
+	for i := 0; i < len(c); i++ {
+		if c[i].Name != test_strings[i] {
+			t.Errorf("%s != %s", c[i].Name, test_strings[i])
+		}
+	}
+}
+
+func TestGetAllJoinedCampaigns(t *testing.T) {
+	test_strings := [2]string{"TheBestCampaignEver", "AnotherCampaign"}
+
+	Connect()
+	c := GetAllHostCampaigns("user2@example.com")
+	for i := 0; i < len(c); i++ {
+
+		if c[i].Name != test_strings[i] {
+			t.Errorf("%s != %s", c[i].Name, test_strings[i])
+		}
+	}
+}
+
+func TestGetAllCampaignSaves(t *testing.T) {
+	test_strings := [2]string{"34dc23", "3w465f23456"}
+
+	Connect()
+	s := GetAllCampaignSaves("36bb4cb8-73a7-4944-ae38-3394eb6c914f")
+
+	for i := 0; i < len(s); i++ {
+
+		if s[i].Hash != test_strings[i] {
+			t.Errorf("%s != %s", s[i].Hash, test_strings[i])
+		}
+	}
+
+}
+
 func TestReadRecord(t *testing.T) {
 	// Test read logic
 }

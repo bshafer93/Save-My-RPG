@@ -22,6 +22,10 @@ type ServerInfo struct {
 	LoggedAt time.Time `json:"LoggedAt"`
 }
 
+type CampaignID struct {
+	Group_ID string `json:"id"`
+}
+
 type User = dal.User
 
 var server *http.Server
@@ -95,6 +99,60 @@ func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Upload received!"))
 }
 
+func RetrieveAllJoinedCampaigns(w http.ResponseWriter, r *http.Request) {
+	resp_bytes, err := io.ReadAll(r.Body)
+	fmt.Println(resp_bytes)
+	fmt.Println(string(resp_bytes))
+	if err != nil {
+		fmt.Println(err)
+	}
+	userInfoJson := &User{}
+
+	err = json.Unmarshal(resp_bytes, userInfoJson)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("Username: "+userInfoJson.Username+"\nEmail:", userInfoJson.Email)
+
+	campaigns := dal.GetAllJoinedCampaigns(userInfoJson.Email)
+
+	campainsJson, err := json.Marshal(campaigns)
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.Write(campainsJson)
+
+}
+
+func RetrieveAllCampaignSaves(w http.ResponseWriter, r *http.Request) {
+
+	resp_bytes, err := io.ReadAll(r.Body)
+	fmt.Println(resp_bytes)
+	fmt.Println(string(resp_bytes))
+	if err != nil {
+		fmt.Println(err)
+	}
+	campaignInfoJson := &CampaignID{}
+
+	err = json.Unmarshal(resp_bytes, campaignInfoJson)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("GroupID: ", campaignInfoJson.Group_ID)
+
+	saves := dal.GetAllCampaignSaves(campaignInfoJson.Group_ID)
+
+	savesJson, err := json.Marshal(saves)
+	if err != nil {
+		fmt.Println(err)
+	}
+	w.Write(savesJson)
+}
+
 func Init() bool {
 
 	_, err := LoadConfiguration("/go/src/savemyrpgserver/config.json")
@@ -113,7 +171,8 @@ func Init() bool {
 	mux.HandleFunc("/serverinfo", ServerInfoHandler)
 	mux.HandleFunc("/getfullsave", SendFullFile)
 	mux.HandleFunc("/login", Login)
-
+	mux.HandleFunc("/rc", RetrieveAllJoinedCampaigns)
+	mux.HandleFunc("/cs", RetrieveAllCampaignSaves)
 	server = &http.Server{
 		Addr:              ":" + config.SERVER_PORT,
 		ReadTimeout:       30 * time.Second,

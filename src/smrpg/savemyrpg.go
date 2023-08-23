@@ -3,7 +3,6 @@ package smrpg
 // import the package we need to use
 import (
 	"archive/zip"
-	"crypto/tls"
 	b64 "encoding/base64"
 	"encoding/json"
 	"errors"
@@ -20,10 +19,6 @@ import (
 type ServerInfo struct {
 	Name     string    `json:"Name"`
 	LoggedAt time.Time `json:"LoggedAt"`
-}
-
-type CampaignID struct {
-	Group_ID string `json:"id"`
 }
 
 type User = dal.User
@@ -97,97 +92,6 @@ func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Write([]byte("Upload received!"))
-}
-
-func RetrieveAllJoinedCampaigns(w http.ResponseWriter, r *http.Request) {
-	resp_bytes, err := io.ReadAll(r.Body)
-	fmt.Println(resp_bytes)
-	fmt.Println(string(resp_bytes))
-	if err != nil {
-		fmt.Println(err)
-	}
-	userInfoJson := &User{}
-
-	err = json.Unmarshal(resp_bytes, userInfoJson)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("Username: "+userInfoJson.Username+"\nEmail:", userInfoJson.Email)
-
-	campaigns := dal.GetAllJoinedCampaigns(userInfoJson.Email)
-
-	campainsJson, err := json.Marshal(campaigns)
-	if err != nil {
-		fmt.Println(err)
-	}
-	w.Write(campainsJson)
-
-}
-
-func RetrieveAllCampaignSaves(w http.ResponseWriter, r *http.Request) {
-
-	resp_bytes, err := io.ReadAll(r.Body)
-	fmt.Println(resp_bytes)
-	fmt.Println(string(resp_bytes))
-	if err != nil {
-		fmt.Println(err)
-	}
-	campaignInfoJson := &CampaignID{}
-
-	err = json.Unmarshal(resp_bytes, campaignInfoJson)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("GroupID: ", campaignInfoJson.Group_ID)
-
-	saves := dal.GetAllCampaignSaves(campaignInfoJson.Group_ID)
-
-	savesJson, err := json.Marshal(saves)
-	if err != nil {
-		fmt.Println(err)
-	}
-	w.Write(savesJson)
-}
-
-func Init() bool {
-
-	_, err := LoadConfiguration("/go/src/savemyrpgserver/config.json")
-	if err != nil {
-		return false
-	}
-
-	cert, err := tls.LoadX509KeyPair(config.SERVER_CERT, config.SERVER_KEY)
-	if err != nil {
-		return false
-	}
-
-	tls_config := &tls.Config{Certificates: []tls.Certificate{cert}}
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", handler)
-	mux.HandleFunc("/serverinfo", ServerInfoHandler)
-	mux.HandleFunc("/getfullsave", SendFullFile)
-	mux.HandleFunc("/login", Login)
-	mux.HandleFunc("/rc", RetrieveAllJoinedCampaigns)
-	mux.HandleFunc("/cs", RetrieveAllCampaignSaves)
-	server = &http.Server{
-		Addr:              ":" + config.SERVER_PORT,
-		ReadTimeout:       30 * time.Second,
-		WriteTimeout:      30 * time.Second,
-		IdleTimeout:       30 * time.Second,
-		ReadHeaderTimeout: 30 * time.Second,
-		TLSConfig:         tls_config,
-		Handler:           mux,
-	}
-
-	if !dal.Init() {
-		return false
-	}
-
-	return true
 }
 
 func Start() error {
@@ -333,10 +237,6 @@ func SendZipFile(save_zip_path string) {
 		sfc.TotalChunks = uint32(total_chunks)
 		sfc.ChunkNumber = uint32(current_chunk)
 	}
-
-}
-
-func JoinCampaign(w http.ResponseWriter, r *http.Request) {
 
 }
 

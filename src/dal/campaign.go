@@ -1,6 +1,7 @@
 package dal
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 )
@@ -104,4 +105,35 @@ func GetAllJoinedCampaigns(email string) []Campaign {
 	}
 
 	return campaigns
+}
+
+func GetCampaignInfo(group_id string) *Campaign {
+	q := fmt.Sprintf(`SELECT * FROM groups WHERE id = '%s'`, group_id)
+	row := db.QueryRow(q)
+
+	c := Campaign{}
+	err := row.Scan(&c.ID,
+		&c.Name,
+		&c.Host_Email,
+		&c.Player02_Email,
+		&c.Player03_Email,
+		&c.Player04_Email,
+		&c.Last_Save)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return &c
+
+}
+
+func PlayerJoinCampaign(group_id string, email string, slot string) error {
+	q := fmt.Sprintf(`UPDATE groups SET %s = '%s' WHERE id = '%s';`, slot, email, group_id)
+	_, err := db.Exec(q)
+	if err != nil {
+		fmt.Println(err)
+		return errors.New("Failed to add player to campaign")
+	}
+
+	return nil
 }

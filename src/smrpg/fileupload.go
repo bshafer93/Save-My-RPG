@@ -5,8 +5,6 @@ import (
 	"crypto/tls"
 	"encoding/binary"
 	"fmt"
-	"log"
-	"net"
 )
 
 type SaveFileChunk struct {
@@ -59,18 +57,15 @@ func EstablishFileLink() {
 		return
 	}
 	defer ln.Close()
-
-	for {
-		conn, err := ln.Accept()
-		fmt.Println("Connected Received!")
-		if err != nil {
-			log.Println(err)
-			continue
+	/*
+		for {
+			conn, err := ln.Accept()
+			fmt.Println("Connected Received!")
+			if err != nil {
+				log.Println(err)
+				continue
+			}
+			//go HandleSendFile(conn)
 		}
-		go HandleSendFile(conn)
-	}
-}
-
-func HandleSendFile(conn net.Conn) {
-
+	*/
 }

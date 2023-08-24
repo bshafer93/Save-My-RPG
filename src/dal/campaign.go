@@ -16,11 +16,21 @@ type Campaign struct {
 	Last_Save      *string `json:"last_save" db:"last_save"`
 }
 
-func AddCampaign(campaign_name string, host_email string, player_emails [3]string) bool {
+func UpdateCampaign(campaign_name string, host_email string, player_emails [3]string) bool {
 	_, err := db.Exec(`INSERT INTO groups ("name","host_email","player02_email","player03_email","player04_email") VALUES ($1,$2,$3,$4,$5)`, campaign_name, host_email, player_emails[0], player_emails[1], player_emails[2])
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Failed to add user")
+		return false
+	}
+	return true
+}
+
+func AddCampaign(campaign_name string, host_email string) bool {
+	_, err := db.Exec(`INSERT INTO groups ("name","host_email") VALUES ($1,$2)`, campaign_name, host_email)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Failed to add campaign")
 		return false
 	}
 	return true
@@ -109,6 +119,27 @@ func GetAllJoinedCampaigns(email string) []Campaign {
 
 func GetCampaignInfo(group_id string) *Campaign {
 	q := fmt.Sprintf(`SELECT * FROM groups WHERE id = '%s'`, group_id)
+	row := db.QueryRow(q)
+
+	c := Campaign{}
+	err := row.Scan(&c.ID,
+		&c.Name,
+		&c.Host_Email,
+		&c.Player02_Email,
+		&c.Player03_Email,
+		&c.Player04_Email,
+		&c.Last_Save)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	return &c
+
+}
+
+func GetCampaignInfoHostAndName(host_email string, name string) *Campaign {
+	q := fmt.Sprintf(`SELECT * FROM groups WHERE host_email = '%s' AND name = '%s'`, host_email, name)
+
 	row := db.QueryRow(q)
 
 	c := Campaign{}

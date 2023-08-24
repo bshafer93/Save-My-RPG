@@ -23,7 +23,7 @@ func TestAddCampaign(t *testing.T) {
 	Connect()
 	player_emails := [3]string{"user1@example.com", "user2@example.com", "user3@example.com"}
 
-	if AddCampaign("TheBestCampaignEver", "bshafer93@gmail.com", player_emails) == false {
+	if UpdateCampaign("TheBestCampaignEver", "bshafer93@gmail.com", player_emails) == false {
 		t.Errorf("Campaign %v should be able to be added", "TheBestCampaignEver")
 	}
 }

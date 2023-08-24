@@ -73,25 +73,18 @@ func ServerInfoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
-	//500KB Chunks
-	buf := make([]byte, 512000)
-
-	for {
-		n, err := r.Body.Read(buf)
-		if n > 0 {
-			// Process or save the chunk data here...
-			fmt.Printf("Received %d bytes\n", n)
-		}
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			http.Error(w, "Failed reading request body", http.StatusInternalServerError)
-			return
-		}
+	resp_bytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println(err)
 	}
 
-	w.Write([]byte("Upload received!"))
+	file_name := r.Header.Get("file_name")
+	campaign_id := r.Header.Get("group_id")
+
+	BunnyUploadFile(campaign_id, file_name, resp_bytes)
+
+	w.Write([]byte("fILE UPLOADED"))
+
 }
 
 func Start() error {

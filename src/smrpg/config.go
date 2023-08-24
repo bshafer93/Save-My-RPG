@@ -23,6 +23,7 @@ type Config struct {
 	SAVES_PATH             string `json:"saves_path"`
 	BUNNYNET_READ_API_KEY  string `json:"bunnynet_read_api_key"`
 	BUNNYNET_WRITE_API_KEY string `json:"bunnynet_write_api_key"`
+	BUNNYNET_TOKEN_KEY     string `json:"bunnynet_token_key"`
 	JWT_SECRET_KEY         string `json:"jwt_secret_key"`
 }
 
@@ -65,12 +66,13 @@ func Init() bool {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handler)
 	mux.HandleFunc("/serverinfo", ServerInfoHandler)
-	mux.HandleFunc("/getfullsave", SendFullFile)
 	mux.HandleFunc("/login", Login)
 	mux.HandleFunc("/rc", RetrieveAllJoinedCampaigns)
 	mux.HandleFunc("/cs", RetrieveAllCampaignSaves)
 	mux.HandleFunc("/jc", UserJoinCampaign)
 	mux.HandleFunc("/rci", RetrieveCampaign)
+	mux.HandleFunc("/cc", UserCreateCampaign)
+	mux.HandleFunc("/guu", SaveUploadHandler)
 
 	server = &http.Server{
 		Addr:              ":" + config.SERVER_PORT,

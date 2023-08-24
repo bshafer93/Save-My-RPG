@@ -132,3 +132,41 @@ func UserJoinCampaign(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Joined Campaign!"))
 
 }
+
+func UserCreateCampaign(w http.ResponseWriter, r *http.Request) {
+	resp_bytes, err := io.ReadAll(r.Body)
+	fmt.Println(resp_bytes)
+	fmt.Println(string(resp_bytes))
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	groupInfoJson := &dal.Campaign{}
+
+	err = json.Unmarshal(resp_bytes, groupInfoJson)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	added := dal.AddCampaign(groupInfoJson.Name, groupInfoJson.Host_Email)
+
+	if added != true {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Failed to create campaign"))
+		return
+	}
+
+	campaign := dal.GetCampaignInfoHostAndName(groupInfoJson.Host_Email, groupInfoJson.Name)
+
+	if campaign == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Failed to retrieve campaign..."))
+		return
+	}
+
+	campaignJson, _ := json.Marshal(campaign)
+
+	w.Write(campaignJson)
+
+}

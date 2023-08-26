@@ -67,6 +67,7 @@ func BunnyUploadFile(dest_folder string, file_name string, file []byte) {
 
 	res, _ := http.DefaultClient.Do(req)
 	defer res.Body.Close()
+
 }
 
 func BunnyUploadFileURL(dest_folder string, file_name string, file []byte) {

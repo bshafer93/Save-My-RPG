@@ -39,3 +39,21 @@ func GetAllCampaignSaves(id string) []Save {
 	}
 	return saves
 }
+
+func AddSave(save *Save) bool {
+	_, err := db.Exec(`INSERT INTO saves ("hash","group_id","save_owner","folder_name","cdn_path","date_created","full_local_path") VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+		save.Hash,
+		save.Group_ID,
+		save.Save_Owner,
+		save.Folder_Name,
+		save.CDN_Path,
+		save.Date_Created,
+		"/")
+
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Failed to add save")
+		return false
+	}
+	return true
+}

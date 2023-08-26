@@ -2,6 +2,7 @@ package smrpg
 
 // import the package we need to use
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -36,4 +37,44 @@ func RetrieveAllCampaignSaves(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	w.Write(savesJson)
+}
+
+func SaveImageUploadHandler(w http.ResponseWriter, r *http.Request) {
+	resp_bytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+	file_name := r.Header.Get("file_name")
+	campaign_id := r.Header.Get("group_id")
+
+	BunnyUploadFile(campaign_id, file_name, resp_bytes)
+
+	w.Write([]byte("Save Image UPLOADED"))
+}
+
+func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
+	resp_bytes, err := io.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println(err)
+	}
+	save_owner := r.Header.Get("email")
+	file_name := r.Header.Get("file_name")
+	campaign_id := r.Header.Get("group_id")
+
+	BunnyUploadFile(campaign_id, file_name, resp_bytes)
+
+	save := dal.Save{}
+	h := sha256.New()
+	h.Write(resp_bytes)
+	url := "https://ny.storage.bunnycdn.com/savemyrpg/bg3_saves" + campaign_id + "/" + file_name
+	save.Hash = fmt.Sprintf("%x", h.Sum(nil))
+	save.Group_ID = campaign_id
+	save.Save_Owner = save_owner
+	save.CDN_Path = url
+	save.Date_Created = "'12/28/2022 11:13:31'"
+
+	dal.AddSave(&save)
+
+	w.Write([]byte("fILE UPLOADED"))
+
 }

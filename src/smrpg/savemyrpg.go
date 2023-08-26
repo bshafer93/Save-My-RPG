@@ -2,14 +2,10 @@ package smrpg
 
 // import the package we need to use
 import (
-	"archive/zip"
 	b64 "encoding/base64"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"io"
 	"net/http"
-	"os"
 	"savemyrpg/dal"
 	"time"
 
@@ -72,21 +68,6 @@ func ServerInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(serverInfoJson)
 }
 
-func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
-	resp_bytes, err := io.ReadAll(r.Body)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	file_name := r.Header.Get("file_name")
-	campaign_id := r.Header.Get("group_id")
-
-	BunnyUploadFile(campaign_id, file_name, resp_bytes)
-
-	w.Write([]byte("fILE UPLOADED"))
-
-}
-
 func Start() error {
 
 	err := server.ListenAndServeTLS(config.SERVER_CERT, config.SERVER_KEY)
@@ -97,140 +78,6 @@ func Start() error {
 	}
 	fmt.Println("TLS Connection Established!")
 	return nil
-}
-
-func Register(username string, email string) (*User, error) {
-	// Check if user already exists
-	if dal.FindUserEmail(email) {
-		return nil, errors.New("user email taken")
-	}
-	new_user := User{Username: username, Email: email}
-	// Hash the password
-
-	// Save user to database
-	if !dal.AddUser(&new_user) {
-		return nil, errors.New("user Could not be added")
-	}
-	// Return the user or error
-	return &new_user, nil
-}
-
-func Login(w http.ResponseWriter, r *http.Request) {
-
-	resp_bytes, err := io.ReadAll(r.Body)
-	fmt.Println(resp_bytes)
-	fmt.Println(string(resp_bytes))
-	if err != nil {
-		fmt.Println(err)
-	}
-	userInfoJson := &User{}
-
-	err = json.Unmarshal(resp_bytes, userInfoJson)
-
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	fmt.Println("Username: "+userInfoJson.Username+"\nEmail:", userInfoJson.Email)
-
-	// Check if user exists
-	if !dal.FindUserEmail(userInfoJson.Email) {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Username does not exist"))
-	}
-
-	userInfo := dal.GetUser(userInfoJson.Email)
-	tokenString := CreateLoginToken(userInfo)
-
-	println("User: " + userInfo.Username + " Logged in!")
-
-	w.Header().Add("jwt-token", tokenString)
-	w.Write([]byte("Logged in!"))
-}
-
-func ZipSaveFile(folder_name string) string {
-
-	save_file_path := "/go/src/savemyrpgserver" + config.SAVES_PATH + folder_name
-	zip_file_path := save_file_path + ".zip"
-
-	file_list, err := os.ReadDir(save_file_path)
-	PrintError(err)
-
-	fmt.Println("creating zip archive...")
-
-	archive, err := os.Create(zip_file_path)
-	PrintError(err)
-
-	defer archive.Close()
-	zipWriter := zip.NewWriter(archive)
-
-	for _, f := range file_list {
-		file_name := f.Name()
-		full_file_path := save_file_path + "/" + file_name
-
-		fmt.Println("opening file..." + file_name)
-		f1, err := os.Open(full_file_path)
-		PrintError(err)
-		defer f1.Close()
-
-		fmt.Println("writing file to archive...")
-		w1, err := zipWriter.Create(file_name)
-		PrintError(err)
-
-		if _, err := io.Copy(w1, f1); err != nil {
-			PrintError(err)
-		}
-
-	}
-
-	fmt.Println("Finished Zipping : " + folder_name + ".zip")
-	zipWriter.Close()
-
-	return zip_file_path
-
-}
-
-func GetZipFileBytes(full_path string) []byte {
-
-	bytes, err := os.ReadFile(full_path)
-	PrintError(err)
-	return bytes
-}
-
-func SendZipFile(save_zip_path string) {
-	const BufferSize = 512000
-	save_file_path := "/go/src/savemyrpgserver" + config.SAVES_PATH + save_zip_path
-
-	zip_file, err := os.Open(save_file_path)
-
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer zip_file.Close()
-	zip_file_info, err := zip_file.Stat()
-	PrintError(err)
-	zip_file_size := zip_file_info.Size()
-	total_chunks := zip_file_size / BufferSize
-
-	current_chunk := 1
-	for {
-		sfc := SaveFileChunk{}
-		sfc.Data = make([]byte, BufferSize)
-		bytesread, err := zip_file.Read(sfc.Data)
-		if err != nil {
-			if err != io.EOF {
-				fmt.Println(err)
-			}
-			fmt.Println("All chunks processed")
-			break
-		}
-
-		sfc.ChunkSize = uint32(bytesread)
-		sfc.TotalChunks = uint32(total_chunks)
-		sfc.ChunkNumber = uint32(current_chunk)
-	}
-
 }
 
 func PrintError(err error) {

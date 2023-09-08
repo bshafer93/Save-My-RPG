@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"savemyrpg/dal"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -59,19 +60,21 @@ func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	save_owner := r.Header.Get("email")
 	file_name := r.Header.Get("file_name")
+	folder_name := r.Header.Get("save_folder_name")
 	campaign_id := r.Header.Get("group_id")
 
-	BunnyUploadFile(campaign_id, file_name, resp_bytes)
+	BunnyUploadFile(campaign_id, folder_name+"/"+file_name, resp_bytes)
 
 	save := dal.Save{}
 	h := sha256.New()
 	h.Write(resp_bytes)
-	url := "https://ny.storage.bunnycdn.com/savemyrpg/bg3_saves" + campaign_id + "/" + file_name
+	url := "https://ny.storage.bunnycdn.com/savemyrpg/bg3_saves/" + campaign_id + "/" + folder_name + "/" + file_name
+	save.Folder_Name = folder_name
 	save.Hash = fmt.Sprintf("%x", h.Sum(nil))
 	save.Group_ID = campaign_id
 	save.Save_Owner = save_owner
 	save.CDN_Path = url
-	save.Date_Created = "'12/28/2022 11:13:31'"
+	save.Date_Created = time.Now().Format("2 Jan 2006 15:04:05")
 
 	dal.AddSave(&save)
 

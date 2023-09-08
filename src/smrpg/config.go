@@ -67,14 +67,14 @@ func Init() bool {
 	mux.HandleFunc("/", handler)
 	mux.HandleFunc("/login", Login)
 	mux.HandleFunc("/ru", RegisterUser)
-	mux.HandleFunc("/serverinfo", AuthenticateJWT(ServerInfoHandler))
-	mux.HandleFunc("/rc", AuthenticateJWT(RetrieveAllJoinedCampaigns))
-	mux.HandleFunc("/cs", AuthenticateJWT(RetrieveAllCampaignSaves))
-	mux.HandleFunc("/jc", AuthenticateJWT(UserJoinCampaign))
-	mux.HandleFunc("/rci", AuthenticateJWT(RetrieveCampaign))
-	mux.HandleFunc("/cc", AuthenticateJWT(UserCreateCampaign))
-	mux.HandleFunc("/guu", AuthenticateJWT(SaveUploadHandler))
-	mux.HandleFunc("/usm", AuthenticateJWT(SaveImageUploadHandler))
+	mux.HandleFunc("/serverinfo", AuthenticateJWTWrapper(ServerInfoHandler))
+	mux.HandleFunc("/rc", AuthenticateJWTWrapper(RetrieveAllJoinedCampaigns))
+	mux.HandleFunc("/cs", AuthenticateJWTWrapper(RetrieveAllCampaignSaves))
+	mux.HandleFunc("/jc", AuthenticateJWTWrapper(UserJoinCampaign))
+	mux.HandleFunc("/rci", AuthenticateJWTWrapper(RetrieveCampaign))
+	mux.HandleFunc("/cc", AuthenticateJWTWrapper(UserCreateCampaign))
+	mux.HandleFunc("/guu", AuthenticateJWTWrapper(SaveUploadHandler))
+	mux.HandleFunc("/usm", AuthenticateJWTWrapper(SaveImageUploadHandler))
 
 	server = &http.Server{
 		Addr:              ":" + config.SERVER_PORT,

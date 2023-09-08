@@ -55,5 +55,7 @@ func AddSave(save *Save) bool {
 		fmt.Println("Failed to add save")
 		return false
 	}
+
+	fmt.Println("New Save Added to DB")
 	return true
 }

@@ -164,7 +164,7 @@ func PlayerJoinCampaign(group_id string, email string, slot string) error {
 	_, err := db.Exec(q)
 	if err != nil {
 		fmt.Println(err)
-		return errors.New("Failed to add player to campaign")
+		return errors.New("failed to add player to campaign")
 	}
 
 	return nil

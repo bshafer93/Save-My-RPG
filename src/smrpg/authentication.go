@@ -44,7 +44,7 @@ func VerifyJWT(token string) bool {
 	return true
 }
 
-func AuthenticateJWT(endpointHandler func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
+func AuthenticateJWTWrapper(endpointHandler func(w http.ResponseWriter, r *http.Request)) http.HandlerFunc {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
@@ -86,13 +86,43 @@ func AuthenticateJWT(endpointHandler func(w http.ResponseWriter, r *http.Request
 
 }
 
+func AuthenticateJWT(tokenString string) bool {
+
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+
+		if !ok {
+			return nil, errors.New("not authorized")
+
+		}
+		return []byte(config.JWT_SECRET_KEY), nil
+	})
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+
+	if !token.Valid {
+		return false
+	}
+
+	return true
+}
+
 func Login(w http.ResponseWriter, r *http.Request) {
 
-	resp_bytes, err := io.ReadAll(r.Body)
-	fmt.Println(resp_bytes)
-	fmt.Println(string(resp_bytes))
+	_, err := io.ReadAll(r.Body)
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	if len(r.Header.Get("jwt-token")) > 0 {
+		if AuthenticateJWT(r.Header.Get("jwt-token")) {
+			w.Write([]byte("Logged in!"))
+			return
+		}
 	}
 
 	user_email := r.Header.Get("email")

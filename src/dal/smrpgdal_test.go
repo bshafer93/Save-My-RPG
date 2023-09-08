@@ -1,6 +1,7 @@
 package dal
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -34,10 +35,24 @@ func TestGetUser(t *testing.T) {
 		t.Errorf("User information not retrieved %s", "bshafer93@gmail.com")
 	}
 
-	if u1.Username != "Bert" || u1.Email != "bshafer93@gmail.com" {
+	if u1.Pwd != "Bert" || u1.Email != "bshafer93@gmail.com" {
 		t.Errorf("User information not retrieved properly %s", u1.Email)
 	}
 
+}
+
+func TestGetPassword(t *testing.T) {
+	Connect()
+	pwd := GetPassword("bshafer93@gmail.com")
+	if pwd == nil {
+		t.Errorf("User password not retrieved %s", "bshafer93@gmail.com")
+	}
+
+	if *pwd != "Bert" {
+		t.Errorf("User information not retrieved properly %s", "bshafer93@gmail.com")
+	}
+
+	fmt.Printf("PWD is %s\n", *pwd)
 }
 
 func TestGetAllHostCampaigns(t *testing.T) {

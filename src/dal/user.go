@@ -5,12 +5,12 @@ import (
 )
 
 type User struct {
-	Username string `json:"Username"`
-	Email    string `json:"Email"`
+	Pwd   string `json:"Password"`
+	Email string `json:"Email"`
 }
 
 func AddUser(user *User) bool {
-	_, err := db.Exec(`INSERT INTO users ("username","email") VALUES($1, $2)`, user.Username, user.Email)
+	_, err := db.Exec(`INSERT INTO users ("pwd","email") VALUES($1, $2)`, user.Pwd, user.Email)
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println("Failed to add user")
@@ -32,14 +32,6 @@ func RemoveUser(email string) bool {
 	return true
 }
 
-func UpdateUserEmail() {
-
-}
-
-func UpdateUserName() {
-
-}
-
 func FindUserEmail(email string) bool {
 	var doesExist bool
 
@@ -54,11 +46,31 @@ func FindUserEmail(email string) bool {
 
 func GetUser(email string) *User {
 	var u User
-	q := "SELECT email,username FROM users WHERE email = '" + email + "';"
+	q := "SELECT email,pwd FROM users WHERE email = '" + email + "';"
 
 	row := db.QueryRow(q)
 	fmt.Print()
-	row.Scan(&u.Email, &u.Username)
+	row.Scan(&u.Email, &u.Pwd)
 	fmt.Print(u.Email)
 	return &u
+}
+
+func GetPassword(email string) *string {
+
+	q := "SELECT pwd FROM users WHERE email = '" + email + "';"
+
+	row := db.QueryRow(q)
+	var pwd string
+
+	row.Scan(&pwd)
+	if len(pwd) <= 1 {
+		return nil
+	}
+
+	if pwd == "" {
+		return nil
+	}
+
+	return &pwd
+
 }

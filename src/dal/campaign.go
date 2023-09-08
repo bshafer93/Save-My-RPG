@@ -96,6 +96,7 @@ func GetAllJoinedCampaigns(email string) []Campaign {
 
 	if err != nil {
 		fmt.Println(err)
+		return nil
 	}
 	defer rows.Close()
 	for rows.Next() {

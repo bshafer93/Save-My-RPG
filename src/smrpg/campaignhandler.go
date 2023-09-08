@@ -31,9 +31,13 @@ func RetrieveAllJoinedCampaigns(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	fmt.Println("Username: "+userInfoJson.Username+"\nEmail:", userInfoJson.Email)
-
 	campaigns := dal.GetAllJoinedCampaigns(userInfoJson.Email)
+
+	if campaigns == nil {
+		fmt.Println("No Campaigns Found")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("No Campaigns Found"))
+	}
 
 	campainsJson, err := json.Marshal(campaigns)
 	if err != nil {
@@ -135,7 +139,7 @@ func UserJoinCampaign(w http.ResponseWriter, r *http.Request) {
 
 func UserCreateCampaign(w http.ResponseWriter, r *http.Request) {
 	resp_bytes, err := io.ReadAll(r.Body)
-	fmt.Println(resp_bytes)
+	fmt.Println("Create Campaign" + string(resp_bytes))
 	fmt.Println(string(resp_bytes))
 	if err != nil {
 		fmt.Println(err)
@@ -151,7 +155,7 @@ func UserCreateCampaign(w http.ResponseWriter, r *http.Request) {
 
 	added := dal.AddCampaign(groupInfoJson.Name, groupInfoJson.Host_Email)
 
-	if added != true {
+	if !added {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Failed to create campaign"))
 		return

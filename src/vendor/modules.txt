@@ -25,8 +25,6 @@ git.sr.ht/~jamesponddotco/xstd-go/xlog
 git.sr.ht/~jamesponddotco/xstd-go/xnet/xhttp/xhttputil
 git.sr.ht/~jamesponddotco/xstd-go/xstrings
 git.sr.ht/~jamesponddotco/xstd-go/xunsafe
-# github.com/golang-jwt/jwt v3.2.2+incompatible
-## explicit
 # github.com/golang-jwt/jwt/v5 v5.0.0
 ## explicit; go 1.18
 github.com/golang-jwt/jwt/v5
@@ -37,6 +35,8 @@ github.com/lib/pq/oid
 github.com/lib/pq/scram
 # golang.org/x/crypto v0.8.0
 ## explicit; go 1.17
+golang.org/x/crypto/bcrypt
+golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/internal/alias
 # golang.org/x/sys v0.7.0

@@ -65,14 +65,16 @@ func Init() bool {
 	tls_config := &tls.Config{Certificates: []tls.Certificate{cert}}
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handler)
-	mux.HandleFunc("/serverinfo", ServerInfoHandler)
 	mux.HandleFunc("/login", Login)
-	mux.HandleFunc("/rc", RetrieveAllJoinedCampaigns)
-	mux.HandleFunc("/cs", RetrieveAllCampaignSaves)
-	mux.HandleFunc("/jc", UserJoinCampaign)
-	mux.HandleFunc("/rci", RetrieveCampaign)
-	mux.HandleFunc("/cc", UserCreateCampaign)
-	mux.HandleFunc("/guu", SaveUploadHandler)
+	mux.HandleFunc("/ru", RegisterUser)
+	mux.HandleFunc("/serverinfo", AuthenticateJWT(ServerInfoHandler))
+	mux.HandleFunc("/rc", AuthenticateJWT(RetrieveAllJoinedCampaigns))
+	mux.HandleFunc("/cs", AuthenticateJWT(RetrieveAllCampaignSaves))
+	mux.HandleFunc("/jc", AuthenticateJWT(UserJoinCampaign))
+	mux.HandleFunc("/rci", AuthenticateJWT(RetrieveCampaign))
+	mux.HandleFunc("/cc", AuthenticateJWT(UserCreateCampaign))
+	mux.HandleFunc("/guu", AuthenticateJWT(SaveUploadHandler))
+	mux.HandleFunc("/usm", AuthenticateJWT(SaveImageUploadHandler))
 
 	server = &http.Server{
 		Addr:              ":" + config.SERVER_PORT,

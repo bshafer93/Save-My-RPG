@@ -2,7 +2,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 create table users (
     email text PRIMARY KEY UNIQUE,
-    username text NOT NULL
+    pwd text NOT NULL
 );
 
 create table groups (
@@ -32,13 +32,13 @@ WITH numbers AS (
   SELECT generate_series(1,10) AS id
 )
 
-INSERT INTO users (username, email)
+INSERT INTO users (pwd, email)
 SELECT
-  'user' || id AS username,
+  'user' || id AS pwd,
   'user' || id || '@example.com' AS email
 FROM numbers;
 
 
-INSERT INTO users(email,username)
+INSERT INTO users(email,pwd)
 VALUES ('bshafer93@gmail.com','Bert');
 

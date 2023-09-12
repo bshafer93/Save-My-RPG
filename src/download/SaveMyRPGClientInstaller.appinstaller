@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AppInstaller
+	Uri="https://savemyrpg.com/download/SaveMyRPGClientInstaller.appinstaller"
+	Version="1.0.4.0" xmlns="http://schemas.microsoft.com/appx/appinstaller/2017/2">
+	<MainBundle
+		Name="c07849b6-171f-4ec6-9862-743f6a55e6d5"
+		Version="1.0.4.0"
+		Publisher="CN=BrentS"
+		Uri="https://savemyrpg.com/download/SaveMyRPGClientInstaller_1.0.4.0_Debug_Test/SaveMyRPGClientInstaller_1.0.4.0_x64_Debug.msixbundle" />
+	<UpdateSettings>
+		<OnLaunch
+			HoursBetweenUpdateChecks="0" />
+	</UpdateSettings>
+</AppInstaller>

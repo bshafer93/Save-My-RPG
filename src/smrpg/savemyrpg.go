@@ -80,10 +80,6 @@ func Start() error {
 	return nil
 }
 
-func DownloadHandler(w http.ResponseWriter, r *http.Request) {
-
-}
-
 func PrintError(err error) {
 	if err != nil {
 		fmt.Println(err)

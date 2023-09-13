@@ -86,7 +86,7 @@ func AuthenticateJWTWrapper(endpointHandler func(w http.ResponseWriter, r *http.
 
 }
 
-func AuthenticateJWT(tokenString string) bool {
+func AuthenticateJWT(tokenString string) (jwt.MapClaims, bool) {
 
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
@@ -101,14 +101,18 @@ func AuthenticateJWT(tokenString string) bool {
 
 	if err != nil {
 		fmt.Println(err.Error())
-		return false
+		return nil, false
 	}
 
 	if !token.Valid {
-		return false
+		return nil, false
 	}
 
-	return true
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, true
+	}
+
+	return nil, false
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -118,15 +122,17 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
+	user_email := r.Header.Get("email")
+	pwd := r.Header.Get("pwd")
+
 	if len(r.Header.Get("jwt-token")) > 0 {
-		if AuthenticateJWT(r.Header.Get("jwt-token")) {
+		claims, ok := AuthenticateJWT(r.Header.Get("jwt-token"))
+
+		if ok && fmt.Sprint(claims["email"]) == user_email {
 			w.Write([]byte("Logged in!"))
 			return
 		}
 	}
-
-	user_email := r.Header.Get("email")
-	pwd := r.Header.Get("pwd")
 
 	fmt.Println("Email: "+user_email+"\npwd:", pwd)
 

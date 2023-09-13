@@ -50,7 +50,7 @@ func PrintConfig() {
 	}
 }
 
-func DownloadApp(w http.ResponseWriter, r *http.Request) {
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "/go/src/savemyrpgserver/download/index.html")
 }
 
@@ -68,8 +68,7 @@ func Init() bool {
 
 	tls_config := &tls.Config{Certificates: []tls.Certificate{cert}}
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", handler)
-	mux.HandleFunc("/download", DownloadApp)
+	mux.HandleFunc("/", HomeHandler)
 	mux.HandleFunc("/login", Login)
 	mux.HandleFunc("/ru", RegisterUser)
 	mux.HandleFunc("/serverinfo", AuthenticateJWTWrapper(ServerInfoHandler))

@@ -3,3 +3,4 @@ temp/*
 tunnel.env
 bg_saves/*
 src/download/*
+*.exe

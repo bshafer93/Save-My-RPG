@@ -26,7 +26,6 @@ create table saves (
 ALTER TABLE groups
 ADD COLUMN last_save text references saves(hash);
 
-
 -- Ten random Users
 WITH numbers AS (
   SELECT generate_series(1,10) AS id
@@ -38,7 +37,6 @@ SELECT
   'user' || id || '@example.com' AS email
 FROM numbers;
 
-
 INSERT INTO users(email,pwd)
-VALUES ('bshafer93@gmail.com','Bert');
+VALUES ('bertbertexample@gmail.com','Bert');
 

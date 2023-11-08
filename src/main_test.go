@@ -96,7 +96,7 @@ func TestBunnyUploadFile(t *testing.T) {
 		t.Error(err)
 	}
 	smrpg.InitBunny()
-	tmp := smrpg.GetZipFileBytes(`C:\Users\brent\Desktop\brserver.bat`)
+	tmp := smrpg.GetZipFileBytes(`..\brserver.bat`)
 
 	smrpg.BunnyUploadFile("bg3_saves", "br serv.wack", tmp)
 

@@ -57,15 +57,4 @@ func EstablishFileLink() {
 		return
 	}
 	defer ln.Close()
-	/*
-		for {
-			conn, err := ln.Accept()
-			fmt.Println("Connected Received!")
-			if err != nil {
-				log.Println(err)
-				continue
-			}
-			//go HandleSendFile(conn)
-		}
-	*/
 }

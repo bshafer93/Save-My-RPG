@@ -13,7 +13,9 @@ Save My RPG is a Desktop application that allows users to share their game saves
 
 ### Code Details
 
+
 * `Dockerfile.production`
+* `<TOKEN>` is used in code to represent a code secret/token
 
 ## Motivation
 

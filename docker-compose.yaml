@@ -40,7 +40,7 @@ services:
     environment:
       WATCHTOWER_NOTIFICATION_REPORT: "true"
       WATCHTOWER_NOTIFICATION_URL: >
-        discord://8FIetuxRmMID-1Ebf0X1MgtfafUconwq2Uba2Mj5ncfKOOBmjDKt5w79bqZgf8QSRVjp@1096112705968029706
+        <TOKEN>
       WATCHTOWER_NOTIFICATION_TEMPLATE: |
         {{- if .Report -}}
               {{- with .Report -}}

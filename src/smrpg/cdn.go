@@ -30,9 +30,9 @@ func InitBunny() {
 		Application: &bunnystorage.Application{
 			Name:    "Save My Rpg",
 			Version: "0.0.1",
-			Contact: "bshafer93@gmail.com",
+			Contact: "<EMAILUSED>@gmail.com",
 		},
-		StorageZone: "savemyrpg",
+		StorageZone: "<STORAGE ZONE NAME>",
 		Key:         readWriteKey,
 		ReadOnlyKey: readOnlyKey,
 		Endpoint:    bunnystorage.EndpointNewYork,
@@ -57,7 +57,7 @@ func BunnyDownloadFile(save_name string) {
 
 func BunnyUploadFile(dest_folder string, file_name string, file []byte) {
 
-	url := "https://ny.storage.bunnycdn.com/savemyrpg/bg3_saves/" + dest_folder + "/" + file_name
+	url := "<BUNNY CDN URL>/savemyrpg/bg3_saves/" + dest_folder + "/" + file_name
 
 	payload := bytes.NewReader(file)
 	req, _ := http.NewRequest("PUT", url, payload)
@@ -72,7 +72,7 @@ func BunnyUploadFile(dest_folder string, file_name string, file []byte) {
 
 func BunnyUploadFileURL(dest_folder string, file_name string, file []byte) {
 
-	url := "https://ny.storage.bunnycdn.com/savemyrpg/bg3_saves" + dest_folder + "/" + file_name
+	url := "<BUNNY CDN URL>/savemyrpg/bg3_saves" + dest_folder + "/" + file_name
 
 	payload := bytes.NewReader(file)
 	req, _ := http.NewRequest("PUT", url, payload)
@@ -90,32 +90,6 @@ func BunnyUploadFileURL(dest_folder string, file_name string, file []byte) {
 func BunnyGenerateUploadFileURL(group_folder string, save_name string) string {
 
 	path := "/savemyrpg/bg3_saves/" + save_name
-	/*
-		var securityKey = "token_security_key";
-		var path = "/pathto/file.jpg";
-
-		// Load the current time
-		var unixBaseTime = new DateTime(1970,1,1,0,0,0,0,System.DateTimeKind.Utc);
-		var currentTime = ((long)(DateTime.UtcNow - unixBaseTime).TotalSeconds);
-
-		// Set the time of expiry to one hour from now
-		var expires = currentTime + 3600;
-
-		// Generate the token
-		System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create();
-
-		string hashableBase = securityKey + path + expires;
-
-		// If using IP validation
-		// hashableBase += "146.14.19.7";
-
-		byte[] outpufBuffer = md5.ComputeHash(Encoding.UTF8.GetBytes(hashableBase));
-		var token = Convert.ToBase64String(outpufBuffer);
-		token = token.Replace("\n", "").Replace("+", "-").Replace("/", "_").Replace("=", "");
-
-		// Generate the URL
-		var url = $"https://myzone.b-cdn.net{path}?token={token}&expires={expires}";
-	*/
 
 	unixExpireTime := time.Now().Unix() * 86400
 
@@ -129,7 +103,7 @@ func BunnyGenerateUploadFileURL(group_folder string, save_name string) string {
 	token = strings.Replace(token, "/", "_", -1)
 	token = strings.Replace(token, "=", "", -1)
 
-	url := fmt.Sprintf(`https://ny.storage.bunnycdn.com%s?token=%s&expires=%d`, path, token, unixExpireTime)
+	url := fmt.Sprintf(`<BUNNY CDN URL>%s?token=%s&expires=%d`, path, token, unixExpireTime)
 	return url
 }
 

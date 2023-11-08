@@ -59,16 +59,6 @@ func GetAllHostCampaigns(host_email string) []Campaign {
 		fmt.Println(err)
 	}
 	defer rows.Close()
-	/*
-		cols, err := rows.Columns()
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		for i := 0; i < len(cols); i++ {
-			println(cols[i])
-		}
-	*/
 
 	for rows.Next() {
 		c := Campaign{}

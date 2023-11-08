@@ -18,6 +18,7 @@ func RetrieveAllCampaignSaves(w http.ResponseWriter, r *http.Request) {
 	resp_bytes, err := io.ReadAll(r.Body)
 	fmt.Println(resp_bytes)
 	fmt.Println(string(resp_bytes))
+
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -38,6 +39,21 @@ func RetrieveAllCampaignSaves(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 	w.Write(savesJson)
+}
+
+func SaveCommentUpdate(w http.ResponseWriter, r *http.Request) {
+
+	save_hash := r.Header.Get("hash")
+	save_comment := r.Header.Get("comment")
+
+	if !dal.UpdateSaveComment(save_hash, save_comment) {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Failed to update save comment"))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Updated save comment"))
+
 }
 
 func SaveImageUploadHandler(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +78,7 @@ func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
 	file_name := r.Header.Get("file_name")
 	folder_name := r.Header.Get("save_folder_name")
 	campaign_id := r.Header.Get("group_id")
+	comment := r.Header.Get("comment")
 
 	BunnyUploadFile(campaign_id, folder_name+"/"+file_name, resp_bytes)
 
@@ -75,6 +92,12 @@ func SaveUploadHandler(w http.ResponseWriter, r *http.Request) {
 	save.Save_Owner = save_owner
 	save.CDN_Path = url
 	save.Date_Created = time.Now().Format("2 Jan 2006 15:04:05")
+
+	if len(comment) > 1 {
+		save.Comment = comment
+	} else {
+		save.Comment = "Default Comment..."
+	}
 
 	dal.AddSave(&save)
 

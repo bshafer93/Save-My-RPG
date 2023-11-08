@@ -79,7 +79,7 @@ func Init() bool {
 	mux.HandleFunc("/cc", AuthenticateJWTWrapper(UserCreateCampaign))
 	mux.HandleFunc("/guu", AuthenticateJWTWrapper(SaveUploadHandler))
 	mux.HandleFunc("/usm", AuthenticateJWTWrapper(SaveImageUploadHandler))
-
+	mux.HandleFunc("/scu", AuthenticateJWTWrapper(SaveCommentUpdate))
 	server = &http.Server{
 		Addr:              ":" + config.SERVER_PORT,
 		ReadTimeout:       30 * time.Second,

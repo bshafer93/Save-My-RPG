@@ -22,7 +22,6 @@ RUN mkdir $APP_HOME/bg_saves
 COPY bg_saves $APP_HOME/bg_saves
 COPY src/config.json $APP_HOME
 COPY src/download $APP_HOME/download/
-COPY src/download/site $APP_HOME/download/site
 COPY --from=builder "$APP_HOME"/savemyrpgserver $APP_HOME
 
 EXPOSE 443

@@ -12,6 +12,7 @@ type Save struct {
 	Full_Path    string `json:"-" db:"full_local_path"`
 	CDN_Path     string `json:"cdn_path" db:"cdn_path"`
 	Date_Created string `json:"date_created" db:"date_created"`
+	Comment      string `json:"Comment" db:"comment" default:"Comment..."`
 }
 
 func GetAllCampaignSaves(id string) []Save {
@@ -31,7 +32,8 @@ func GetAllCampaignSaves(id string) []Save {
 			&s.Folder_Name,
 			&s.Full_Path,
 			&s.CDN_Path,
-			&s.Date_Created)
+			&s.Date_Created,
+			&s.Comment)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -40,15 +42,28 @@ func GetAllCampaignSaves(id string) []Save {
 	return saves
 }
 
+func UpdateSaveComment(hash string, comment string) bool {
+	q := fmt.Sprintf(`UPDATE saves SET comment = '%s' WHERE hash = '%s'`, comment, hash)
+	_, err := db.Exec(q)
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Failed to update save comment")
+		return false
+	}
+	fmt.Println("Save Comment Updated.")
+	return true
+}
+
 func AddSave(save *Save) bool {
-	_, err := db.Exec(`INSERT INTO saves ("hash","group_id","save_owner","folder_name","cdn_path","date_created","full_local_path") VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+	_, err := db.Exec(`INSERT INTO saves ("hash","group_id","save_owner","folder_name","cdn_path","date_created","full_local_path","comment") VALUES ($1,$2,$3,$4,$5,$6,$7,$8)`,
 		save.Hash,
 		save.Group_ID,
 		save.Save_Owner,
 		save.Folder_Name,
 		save.CDN_Path,
 		save.Date_Created,
-		"/")
+		"/",
+		save.Comment)
 
 	if err != nil {
 		fmt.Println(err)

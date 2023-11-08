@@ -13,9 +13,15 @@ Save My RPG is a Desktop application that allows users to share their game saves
 
 ### Code Details
 
-
-* `Dockerfile.production`
+* `src`
+    * `dal` Data Access Layer for PostGreSQL
+    * `smrpg` Server Code
+        * `cdn.go` Interface code for Bunny CDN
+    * `config.json` Config File for server
+* `Dockerfile.production` Used to build  savemyrpg server
+* `db_initialize.sql` Used to Initialize the PostgreSQL database  
 * `<TOKEN>` is used in code to represent a code secret/token
+
 
 ## Motivation
 

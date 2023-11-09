@@ -2,7 +2,7 @@
 
 ## Description
 
-Save My RPG is a Desktop application that allows users to share their game saves with a group of friends. Originally built for Baulders Gate 3, this application could easily be adapted to a generic file sharing application!
+Save My RPG is a desktop application that allows users to share their game saves with a group of friends. Originally built for Baulders Gate 3, this application could easily be adapted to a generic file sharing application.
 
 ## Technical Details
 
